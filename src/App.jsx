@@ -1,7 +1,9 @@
 import React from 'react'
 import ChatbotIcon from './components/ChatbotIcon'
+import ChatForm from './components/ChatForm'
 
 function App() {
+
   return (
     <div className='container'>
       <div className='chatbot-popup'>
@@ -11,7 +13,7 @@ function App() {
             <ChatbotIcon />
             <h2 className='logo-text'>Chatbot</h2>
           </div>
-          <button class="material-symbols-rounded">
+          <button className="material-symbols-rounded">
             keyboard_arrow_down
           </button>
         </div>
@@ -24,18 +26,13 @@ function App() {
           </div>
 
           <div className='message user-message'>
-            <ChatbotIcon />
+
             <p className='message-text'> Lorem ipsum, dolor sit amet consectetur adipisicing. </p>
           </div>
         </div>
         {/* chatbot footer*/}
         <div className='chat-footer'>
-          <form action="#" className="chat-form">
-            <input type="text" placeholder='Message...' className='message-input' required />
-            <button className="material-symbols-rounded">arrow_upward</button>
-
-
-          </form>
+          <ChatForm />
 
 
         </div>
