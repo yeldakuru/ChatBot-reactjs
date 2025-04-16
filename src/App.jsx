@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ChatbotIcon from './components/ChatbotIcon'
 import ChatForm from './components/ChatForm'
 import ChatMessage from './components/ChatMessage';
@@ -7,6 +7,8 @@ import ChatMessage from './components/ChatMessage';
 function App() {
 
   const [chatHistory, setChatHistory] = useState([]);
+  const [showChatbot, setShowChatbot] = useState(false);
+  const chatBodyRef = useRef();
 
   const generateBotResponse = async (history) => {
     //helper function to update chat history
@@ -37,9 +39,17 @@ function App() {
       console.log(error)
     }
   }
+  useEffect(() => {
+    //auto-scroll whenever chat history updates
+    chatBodyRef.current.scrollTo({ top: chatBodyRef.current.scrollHeight, behavior: "smooth" });
+  }, [chatHistory]);
 
   return (
-    <div className='container'>
+    <div className={`container ${showChatbot ? "show-chatbot" : ""}`}>
+      <button onClick={() => setShowChatbot(prev => !prev)} id="chatbot-toggler">
+        <span className='material-symbols-rounded'>mode_comment</span>
+        <span className='material-symbols-rounded'>close</span>
+      </button>
       <div className='chatbot-popup'>
         {/* chatbot header */}
         <div className='chat-header'>
@@ -47,13 +57,13 @@ function App() {
             <ChatbotIcon />
             <h2 className='logo-text'>Chatbot</h2>
           </div>
-          <button className="material-symbols-rounded">
+          <button onClick={() => setShowChatbot(prev => !prev)} className="material-symbols-rounded">
             keyboard_arrow_down
           </button>
         </div>
 
         {/* chatbot body*/}
-        <div className="chat-body">
+        <div ref={chatBodyRef} className="chat-body">
           <div className='message bot-message'>
             <ChatbotIcon />
             <p className='message-text'> Hey there 👋 <br />How can I help you today?</p>
