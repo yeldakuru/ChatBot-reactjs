@@ -2,8 +2,42 @@ import React, { useState } from 'react'
 import ChatbotIcon from './components/ChatbotIcon'
 import ChatForm from './components/ChatForm'
 import ChatMessage from './components/ChatMessage';
+
+
 function App() {
+
   const [chatHistory, setChatHistory] = useState([]);
+
+  const generateBotResponse = async (history) => {
+    //helper function to update chat history
+    const updateHistory = (text) => {
+      setChatHistory(prev => [...prev.filter(msg => msg.text !== "Thinking..."), { role: "model", text }])
+    }
+
+    //format chat history for API request
+    history = history.map(({ role, text }) => ({ role, parts: [{ text }] }));
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application.json" },
+      body: JSON.stringify({ contents: history })
+    }
+
+    try {
+      //make the api call to get the bot's response
+      const response = await fetch(import.meta.env.VITE_API_URL, requestOptions);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error.message || "Something went wrong!");
+
+      //clean and update chat history with bot's response
+      const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+      updateHistory(apiResponseText);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className='container'>
       <div className='chatbot-popup'>
@@ -32,7 +66,7 @@ function App() {
         </div>
         {/* chatbot footer*/}
         <div className='chat-footer'>
-          <ChatForm setChatHistory={setChatHistory} />
+          <ChatForm chatHistory={chatHistory} setChatHistory={setChatHistory} generateBotResponse={generateBotResponse} />
 
 
         </div>

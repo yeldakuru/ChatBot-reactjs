@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 
 
-const ChatForm = ({ setChatHistory }) => {
+const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
     const inputRef = useRef();
 
     const handleFormSubmit = (e) => {
@@ -9,7 +9,12 @@ const ChatForm = ({ setChatHistory }) => {
         const userMessage = inputRef.current.value.trim();
         if (!userMessage) return;
         inputRef.current.value = "";
-        setChatHistory((history) => [...history, { role: "user", text: userMessage }])
+        //update chat history with the user's message
+        setChatHistory((history) => [...history, { role: "user", text: userMessage }]);
+        //add a thinking.. placeholder for the bot's response
+        setTimeout(() => setChatHistory((history) => [...history, { role: "model", text: "Thinking..." }]), 600);
+        //call the function to generate the bot's response
+        generateBotResponse([...chatHistory, { role: "user", text: userMessage }]);
     };
     return (
         <form action="#" className="chat-form" onSubmit={handleFormSubmit}>
