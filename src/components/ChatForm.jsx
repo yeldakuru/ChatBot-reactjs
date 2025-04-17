@@ -14,7 +14,7 @@ const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }) => {
         //add a thinking.. placeholder for the bot's response
         setTimeout(() => setChatHistory((history) => [...history, { role: "model", text: "Thinking..." }]), 600);
         //call the function to generate the bot's response
-        generateBotResponse([...chatHistory, { role: "user", text: userMessage }]);
+        generateBotResponse([...chatHistory, { role: "user", text: `Using the details provided above,please addres this query:${userMessage}` }]);
     };
     return (
         <form action="#" className="chat-form" onSubmit={handleFormSubmit}>
